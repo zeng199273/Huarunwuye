@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dao.mapper.EmployeesDao">
+	<resultMap type="map" id="employeesJobsMap">
+		<!-- 编写自定义的映射 -->
+		<id property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="sex" column="sex"/>
+		<result property="age" column="age"/>
+		<result property="entryDate" column="entryDate"/>
+		<result property="phone" column="phone"/>
+		<result property="staffId" column="staffId"/>
+		<result property="jobs" column="jobs"/>
+		<result property="basePay" column="basePay"/>
+		<result property="subsidy" column="subsidy"/>
+		<result property="grossPay" column="grossPay"/>
+	</resultMap>
+	<resultMap type="map" id="employeesAttendanceMap">
+		<!-- 编写自定义的映射 -->
+		<id property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="staffId" column="staffId"/>
+		<result property="phone" column="phone"/>
+		<result property="clockIn" column="clockIn"/>
+	</resultMap>
+	<!-- 查询员工考勤  自定义返回映射 -->
+	<select id="findEmployeesAttendance" resultMap="employeesAttendanceMap">
+		SELECT e.id , e.name , e.`staffId`,e.`phone`,
+			a.clockIn FROM employees AS e , attendance AS a
+			WHERE e.`staffId` = a.staffId 
+		<if test="_parameter !=null and _parameter !='' and _parameter !='undefined'">
+			AND e.name LIKE "%"#{name}"%"
+		</if>
+	</select>
+	<!-- 查询员工职务  自定义返回映射 -->
+	<select id="findEmployeesJobs" resultMap="employeesJobsMap">
+		SELECT e.id , e.name , e.sex , e.`age`, e.`entryDate`, e.`phone` 
+						,e.`staffId`, j.`jobs`, j.`basePay`, j.`subsidy`,
+							j.`grossPay` FROM employees AS e , jobs AS j 
+							WHERE e.`jobsId` = j.`id`
+		<if test="_parameter !=null and _parameter !='' and _parameter !='undefined'">
+			AND e.name LIKE "%"#{name}"%"
+		</if>
+		ORDER BY e.id ASC
+	</select>
+	<!-- 查询出所有的数据 -->
+	<select id="findAllEmployees" resultType="cn.entity.Employees">
+		select * from employees
+	</select>
+	<!-- 添加一条记录 -->
+	<insert id="addEmployees" parameterType="cn.entity.Employees">
+		insert into employees(`name`,sex,age,entryDate,phone,staffId,jobsId)
+		values(#{name},#{sex},#{age},#{entryDate},#{phone},#{staffId},#{jobsId})
+	</insert>
+	<!-- 删除一条记录 -->
+	<delete id="delEmployees" parameterType="int">
+		delete from employees where id=#{id}
+	</delete>
+	<!-- 使用动态语句修改一条数据 -->
+	<update id="upEmployees" parameterType="cn.entity.Employees">
+		update employees
+		<set>
+			<trim suffixOverrides=",">
+				<if test="name !=null">name=#{name},</if>
+				<if test="sex !=null">sex=#{sex},</if>
+				<if test="age !=null">age=#{age},</if>
+				<if test="entryDate !=null">entryDate=#{entryDate},</if>
+				<if test="phone !=null">phone=#{phone},</if>
+				<if test="staffId !=null">staffId=#{staffId},</if>
+				<if test="jobsId !=null">jobsId=#{jobsId}</if>
+			</trim>
+		</set>
+		where id=#{id}
+	</update>
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dao.mapper.JobsDao">
+	<!-- 查询出所有的数据  -->
+	<select id="findAllJobs" resultType="cn.entity.Jobs">
+		select * from jobs
+	</select>
+	<!-- 添加一条数据 -->
+	<insert id="addJobs" parameterType="cn.entity.Jobs">
+		insert into jobs(jobs,basePay,subsidy,grossPay)
+		values(#{jobs},#{basePay},#{subsidy},#{grossPay})
+	</insert>
+	<!-- 删除一条数据 -->
+	<delete id="delJobs" parameterType="int">
+		delete from jobs where id=#{id}
+	</delete>
+	<!-- 修改一条数据 -->
+	<update id="updateJobs" parameterType="cn.entity.Jobs">
+		update jobs
+		<set>
+			<trim suffixOverrides=",">
+				<if test="jobs !=null">jobs = #{jobs},</if>
+				<if test="basePay !=null">basePay = #{basePay},</if>
+				<if test="subsidy !=null">subsidy = #{subsidy},</if>
+				<if test="grossPay !=null">grossPay = #{grossPay}</if>
+			</trim>
+		</set>
+		where id=#{id}
+	</update>
+</mapper>

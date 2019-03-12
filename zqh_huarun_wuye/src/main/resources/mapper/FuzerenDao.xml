@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dao.mapper.FuzerenDao">
+	<!-- 查询出所有的数据 -->
+	<select id="findFuzeren" resultType="cn.entity.Fuzeren">
+		select * from fuzeren
+	</select>
+	<!-- 根据id查询单个对象 -->
+	<select id="findByIdFuzeren" resultType="cn.entity.Fuzeren" parameterType="int">
+		select * from fuzeren where id=#{id}
+	</select>
+	<!-- 添加一条数据 -->
+	<insert id="addFuzeren" parameterType="cn.entity.Fuzeren">
+		INSERT INTO fuzeren(`name`,phone,jobs,scwxsj)
+		VALUES(#{name},#{phone},#{jobs},#{scwxsj})
+	</insert>
+	<!-- 删除一条数据 -->
+	<delete id="delFuzeren" parameterType="int">
+		delete from fuzeren where id=#{id}
+	</delete>
+	<!-- 修改一条数据 使用动态sql -->
+	<update id="updateFuzeren">
+		update fuzeren
+		<set>
+			<trim suffixOverrides=",">
+				<if test="name !=null">name=#{name},</if>
+				<if test="phone !=null">phone=#{phone},</if>
+				<if test="jobs !=null">jobs=#{jobs},</if>
+				<if test="scwxsj !=null">scwxsj=#{scwxsj}</if>
+			</trim>
+		</set>
+		where id=#{id}
+	</update>
+</mapper>

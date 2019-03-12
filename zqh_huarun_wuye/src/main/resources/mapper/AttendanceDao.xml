@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dao.mapper.AttendanceDao">
+	<!-- 查询出所有的数据 根据参数模糊查询 -->
+	<select id="findAllAttendance" resultType="cn.entity.Attendance" parameterType="string">
+		select * from attendance
+		<where>
+            <if test="_parameter !=null and _parameter !='' and _parameter !='undefined'">
+                staffId LIKE "%"#{staffId}"%"
+            </if>
+        </where>
+	</select>
+	<!-- 添加一条数据 -->
+	<insert id="addAttendance" parameterType="cn.entity.Attendance">
+		insert into attendance(staffId,clockIn)
+		values(#{staffId},#{clockIn})
+	</insert>
+	<!-- 删除一条数据 -->
+	<delete id="delAttendance" parameterType="int">
+		delete from attendance where id=#{id}
+	</delete>
+	<!-- 修改一条数据 -->
+	<update id="updateAttendance" parameterType="cn.entity.Attendance">
+		update attendance set staffId=#{staffId},clockIn=#{clockIn}
+		where id=#{id}
+	</update>
+</mapper>
